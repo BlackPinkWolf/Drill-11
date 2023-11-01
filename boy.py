@@ -7,12 +7,15 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
-FRAMES_PER_ACTION = 8
-
+FRAMES_PER_ACTION = 5
+TIME_PER_ACTION1 = 0.5
+ACTION_PER_TIME1 = 1.0 / TIME_PER_ACTION1
+FRAMES_PER_ACTION1 = 3
 from pico2d import get_time, load_image, load_font, clamp,  SDL_KEYDOWN, SDL_KEYUP, SDLK_SPACE, SDLK_LEFT, SDLK_RIGHT
 from ball import Ball, BigBall
 import game_world
 import game_framework
+import random
 
 # state event check
 # ( state event type, event value )
@@ -53,19 +56,14 @@ def time_out(e):
 
 
 
-
-
-
-
-
 class Idle:
 
     @staticmethod
     def enter(boy, e):
         if boy.face_dir == -1:
-            boy.action = 2
+            boy.action = 1
         elif boy.face_dir == 1:
-            boy.action = 3
+            boy.action = 1
         boy.dir = 0
         boy.frame = 0
         boy.wait_time = get_time() # pico2d import 필요
@@ -79,13 +77,72 @@ class Idle:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-        if get_time() - boy.wait_time > 2:
-            boy.state_machine.handle_event(('TIME_OUT', 0))
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+        boy.action = (boy.action + FRAMES_PER_ACTION1 * ACTION_PER_TIME1 * game_framework.frame_time) % 3
+        boy.x += boy.dir * RUN_SPEED_PPS * game_framework.frame_time
+        boy.x = clamp(25, boy.x, 1600 - 25)
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(int(boy.frame) * 100, boy.action * 100, 100, 100, boy.x, boy.y)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x, boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 180, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 180,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 360, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 360,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 540, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 540,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 720, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 720,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 180, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 180,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 360, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 360,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 540, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 540,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 720, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 720,
+                                          boy.y - 200,
+                                          180, 165)
 
 
 
@@ -96,7 +153,7 @@ class Run:
         if right_down(e) or left_up(e): # 오른쪽으로 RUN
             boy.dir, boy.action, boy.face_dir = 1, 1, 1
         elif left_down(e) or right_up(e): # 왼쪽으로 RUN
-            boy.dir, boy.action, boy.face_dir = -1, 0, -1
+            boy.dir, boy.action, boy.face_dir = -1, 1, -1
 
     @staticmethod
     def exit(boy, e):
@@ -107,41 +164,73 @@ class Run:
 
     @staticmethod
     def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 5
+        boy.action = (boy.action + FRAMES_PER_ACTION1 * ACTION_PER_TIME1 * game_framework.frame_time) % 3
         boy.x += boy.dir * RUN_SPEED_PPS * game_framework.frame_time
         boy.x = clamp(25, boy.x, 1600-25)
 
 
     @staticmethod
     def draw(boy):
-        boy.image.clip_draw(int(boy.frame) * 100, boy.action * 100, 100, 100, boy.x, boy.y)
-
-
-class Sleep:
-
-    @staticmethod
-    def enter(boy, e):
-        boy.frame = 0
-        pass
-
-    @staticmethod
-    def exit(boy, e):
-        pass
-
-    @staticmethod
-    def do(boy):
-        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
-
-
-
-    @staticmethod
-    def draw(boy):
-        if boy.face_dir == -1:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100,
-                                          -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
-        else:
-            boy.image.clip_composite_draw(int(boy.frame) * 100, 300, 100, 100,
-                                          3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x, boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 180, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 180,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 360, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 360,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 540, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 540,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 720, boy.y)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 720,
+                                          boy.y,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 180, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 180,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 360, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 360,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 540, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 540,
+                                          boy.y - 200,
+                                          180, 165)
+        if (boy.face_dir == 1):
+            boy.image.clip_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, boy.x + 720, boy.y - 200)
+        if (boy.face_dir == -1):
+            boy.image.clip_composite_draw(int(boy.frame) * 180, int(boy.action) * 165, 180, 165, 0, 'h', boy.x + 720,
+                                          boy.y - 200,
+                                          180, 165)
 
 
 class StateMachine:
@@ -149,9 +238,8 @@ class StateMachine:
         self.boy = boy
         self.cur_state = Idle
         self.transitions = {
-            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out: Sleep, space_down: Idle},
-            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run},
-            Sleep: {right_down: Run, left_down: Run, right_up: Run, left_up: Run}
+            Idle: {right_down: Run, left_down: Run, left_up: Run, right_up: Run, time_out : Idle, space_down: Idle},
+            Run: {right_down: Idle, left_down: Idle, right_up: Idle, left_up: Idle, space_down: Run}
         }
 
     def start(self):
@@ -179,14 +267,14 @@ class StateMachine:
 
 class Boy:
     def __init__(self):
-        self.x, self.y = 400, 90
+        self.x, self.y = 0,600
         self.frame = 0
         self.action = 3
         self.face_dir = 1
         self.dir = 0
         self.font = load_font('ENCR10B.TTF', 16)
 
-        self.image = load_image('animation_sheet.png')
+        self.image = load_image('bird_animation.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start()
         self.item = 'Ball'
